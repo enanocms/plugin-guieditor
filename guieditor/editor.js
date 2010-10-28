@@ -97,7 +97,8 @@ function guied_act(action)
 										<input type="text" id="guied_intlink_text" style="width: 100%;" /><br /> \
 										<small>' + $lang.get('guied_intlink_text_hint') + '</small> \
 									</td> \
-								</tr>';
+								</tr> \
+							</table>';
 					div.innerHTML += '<p style="text-align: right;"> \
 									<a class="abutton abutton_blue" onclick="guied_intlink_finish(this); return false;" href="#">' + $lang.get('guied_btn_insert') + '</a> \
 									<a class="abutton abutton_red" onclick="miniPromptDestroy(this); return false;" href="#">' + $lang.get('etc_cancel') + '</a> \
@@ -136,7 +137,8 @@ function guied_act(action)
 										<input type="text" id="guied_extlink_text" style="width: 100%;" /><br /> \
 										<small>' + $lang.get('guied_extlink_text_hint') + '</small> \
 									</td> \
-								</tr>';
+								</tr> \
+							</table>';
 					div.innerHTML += '<p style="text-align: right;"> \
 									<a class="abutton abutton_blue" onclick="guied_extlink_finish(this); return false;" href="#">' + $lang.get('guied_btn_insert') + '</a> \
 									<a class="abutton abutton_red" onclick="miniPromptDestroy(this); return false;" href="#">' + $lang.get('etc_cancel') + '</a> \
@@ -160,7 +162,7 @@ function guied_act(action)
 									' + $lang.get('guied_image_lbl_image') + ' \
 									</td> \
 									<td valign="top"> \
-										<img id="guied_image_preview" src="' + cdnPath + '/images/spacer.gif" style="display: block;" /> \
+										<img id="guied_image_preview" src="' + cdnPath + '/images/spacer.gif" style="display: block;" onerror="this.style.display = \'none\';" /> \
 										<input type="text" id="guied_image_file" class="autofill guied_image" style="width: 100%;" onblur="guied_refresh_image();" /><br /> \
 										<small>' + $lang.get('guied_image_af_hint') + '</small> \
 										<div id="guied_upload_body" style="padding: 4px 0;"> \
@@ -170,12 +172,95 @@ function guied_act(action)
 								</tr> \
 								<tr> \
 									<td valign="top" style="white-space: nowrap;"> \
-									' + $lang.get('guied_image_lbl_caption') + ' \
+										' + $lang.get('guied_image_lbl_resize') + ' \
+									</td> \
+									<td valign="top"> \
+										<label> \
+											<input type="checkbox" id="guied_image_resize" onclick="$(\'#guied_image_resizer\').toggle(\'blind\');" /> \
+											' + $lang.get('guied_image_checkbox_resize') + ' \
+										</label> \
+										<div id="guied_image_resizer" style="display: none;"> \
+											' + $lang.get('guied_image_lbl_dimensions') + ' \
+											<input type="text" id="guied_image_size_x" size="5" /> x \
+											<input type="text" id="guied_image_size_y" size="5" /> \
+											<br /> \
+											&nbsp;&nbsp;&nbsp; \
+												' + $lang.get('guied_image_resize_or') + ' \
+												<label><input type="checkbox" id="guied_image_resize_default" onclick="guied_image_toggle_default();" /> \
+												' + $lang.get('guied_image_resize_lbl_default') + '</label><br /> \
+											<small> \
+												' + $lang.get('guied_image_msg_preserve_aspect') + ' \
+											</small> \
+										</div> \
+									</td> \
+								</tr> \
+								<tr> \
+									<td valign="top" style="white-space: nowrap;"> \
+										' + $lang.get('guied_image_lbl_mode') + ' \
+									</td> \
+									<td valign="top"> \
+										<form> \
+										<label> \
+											<input class="guied_image_mode_radio" onclick="guied_image_set_mode(this.value);" type="radio" name="mode" value="framed" checked="checked" /> \
+											' + $lang.get('guied_image_lbl_framed') + ' \
+										</label> \
+										<label> \
+											<input class="guied_image_mode_radio" onclick="guied_image_set_mode(this.value);" type="radio" name="mode" value="inline" /> \
+											' + $lang.get('guied_image_lbl_inline') + ' \
+										</label> \
+										<label> \
+											<input class="guied_image_mode_radio" onclick="guied_image_set_mode(this.value);" type="radio" name="mode" value="raw" /> \
+											' + $lang.get('guied_image_lbl_raw') + ' \
+										</label><br /> \
+										</form> \
+										<small id="guied_mode_hint">' + $lang.get('guied_image_mode_hint_framed') + '</small> \
+									</td> \
+								</tr> \
+							</table> \
+							<div class="guied_image_mode framed"> \
+								<table border="0" cellspacing="5" cellpadding="0" style="width: 100%;"> \
+								<tr> \
+									<td valign="top" style="white-space: nowrap;"> \
+									' + $lang.get('guied_image_framed_lbl_side') + ' \
+									</td> \
+									<td valign="top"> \
+										<form> \
+										<label> \
+											<input class="guied_image_side" type="radio" name="side" value="left" checked="checked" /> \
+											' + $lang.get('guied_image_framed_left') + ' \
+										</label> \
+										<label> \
+											<input class="guied_image_side" type="radio" name="side" value="right" /> \
+											' + $lang.get('guied_image_framed_right') + ' \
+										</label> \
+										</form> \
+									</td> \
+								</tr> \
+								<tr> \
+									<td valign="top" style="white-space: nowrap;"> \
+										' + $lang.get('guied_image_lbl_caption') + ' \
 									</td> \
 									<td valign="top"> \
 										<input type="text" id="guied_image_caption" style="width: 100%;" /> \
 									</td> \
-								</tr>';
+								</tr> \
+								</table> \
+							</div> \
+							<div class="guied_image_mode inline" style="display: none;"> \
+								<table border="0" cellspacing="5" cellpadding="0" style="width: 100%;"> \
+								<tr> \
+									<td valign="top" style="white-space: nowrap;"> \
+										' + $lang.get('guied_image_lbl_alttext') + ' \
+									</td> \
+									<td valign="top"> \
+										<input type="text" id="guied_image_alttext" style="width: 100%;" /> \
+									</td> \
+								</tr> \
+								</table> \
+							</div> \
+							<div class="guied_image_mode raw" style="display: none;"> \
+								' + $lang.get('guied_image_raw_msg_noopt') + ' \
+							</div>';
 					div.innerHTML += '<p style="text-align: right;"> \
 									<a class="abutton abutton_blue" onclick="guied_image_finish(this); return false;" href="#">' + $lang.get('guied_btn_insert') + '</a> \
 									<a class="abutton abutton_red" onclick="miniPromptDestroy(this); return false;" href="#">' + $lang.get('etc_cancel') + '</a> \
@@ -192,6 +277,9 @@ function guied_act(action)
 			break;
 		
 	}
+	/*
+	
+										*/
 }
 
 function guied_intlink_finish(insertbtn)
@@ -244,12 +332,58 @@ function guied_upload_popup()
 
 function guied_refresh_image()
 {
-	$('#guied_image_preview').attr('src', makeUrlNS('Special', 'DownloadFile/' + $('#guied_image_file').val(), 'preview&width=200&height=400')).css('margin-bottom', '5px');
+	$('#guied_image_preview').css('display', 'block').attr('src', makeUrlNS('Special', 'DownloadFile/' + $('#guied_image_file').val(), 'preview&width=200&height=400')).css('margin-bottom', '5px');
 }
 
-function guied_image_finish()
+function guied_image_toggle_default()
 {
-	// yeah... working on this.
+	if ( $('#guied_image_resize_default:checked').length )
+	{
+		$('#guied_image_size_x, #guied_image_size_y').attr('disabled', 'disabled');
+	}
+	else
+	{
+		$('#guied_image_size_x, #guied_image_size_y').removeAttr('disabled');
+	}
+}
+
+function guied_image_set_mode(val)
+{
+	$('#guied_mode_hint').text($lang.get('guied_image_mode_hint_' + val));
+	$('.guied_image_mode').hide();
+	$('.guied_image_mode.' + val).show();
+}
+
+function guied_image_finish(insertbtn)
+{
+	var attrs = [];
+	var filename = $('#guied_image_file').val();
+	attrs.push(':' + namespace_list.File + filename);
+	if ( $('#guied_image_resize:checked').length )
+	{
+		if ( $('#guied_image_resize_default:checked').length )
+			attrs.push('thumb');
+		else
+			attrs.push($('#guied_image_size_x').val() + 'x' + $('#guied_image_size_y'));
+	}
+	var caption = '';
+	switch($('.guied_image_mode_radio:checked').val())
+	{
+		case 'framed':
+			attrs.push($('.guied_image_side:checked').val());
+			caption = $('#guied_image_caption').val();
+			break;
+		case 'inline':
+			caption = $('#guied_image_alttext').val();
+			break;
+	}
+	if ( caption != '' )
+		attrs.push(caption);
+	
+	var tag = '[[' + implode('|', attrs) + ']]';
+	
+	guied_replace_selection(document.getElementById('ajaxEditArea'), tag);
+	miniPromptDestroy(insertbtn);
 }
 
 // Client detection from MediaWiki

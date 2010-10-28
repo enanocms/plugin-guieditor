@@ -33,7 +33,7 @@ function guied_image_autofill(&$dataset)
 		$results = perform_search($_GET['userinput'], $warnings, false, $word_list);
 		foreach ( $results as $i => $result )
 		{
-			if ( $result['namespace'] != 'File' )
+			if ( $result['namespace'] != 'File' || !preg_match('/\.(png|jpeg|jpg|gif)$/i', $result['page_id']) )
 				unset($results[$i]);
 		}
 		if ( count($results) > 5 )
@@ -92,6 +92,24 @@ function guied_image_autofill(&$dataset)
 				image_btn_upload: 'Upload a file',
 				image_lbl_caption: 'Caption:',
 				image_af_hint: 'Type a few letters to search.',
+				image_lbl_resize: 'Resize image:',
+				image_checkbox_resize: 'Resize',
+				image_lbl_dimensions: 'Dimensions:',
+				image_resize_or: 'Or',
+				image_resize_lbl_default: 'Use default preview size',
+				image_msg_preserve_aspect: 'The image\'s aspect ratio will be preserved.',
+				image_lbl_mode: 'Display mode:',
+				image_lbl_framed: 'Framed',
+				image_lbl_inline: 'Inline',
+				image_lbl_raw: 'Raw',
+				image_mode_hint_framed: 'Display the image off to the left or right in a frame.',
+				image_mode_hint_inline: 'Display the image in the middle of the paragraph.',
+				image_mode_hint_raw: 'Display just the image without linking to the file page - useful for putting images into links.',
+				image_framed_lbl_side: 'Display on:',
+				image_framed_left: 'Left side',
+				image_framed_right: 'Right side',
+				image_lbl_alttext: 'Alternate text:',
+				image_raw_msg_noopt: 'No additional options for raw image display.',
 				
 				btn_insert: 'Insert'
 			}
