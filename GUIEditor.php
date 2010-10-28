@@ -16,7 +16,15 @@ $plugins->attachHook('compile_template', 'guied_attach_script();');
 function guied_attach_script()
 {
 	global $template;
-	$template->add_header_js('<script type="text/javascript" src="' . scriptPath . '/plugins/guieditor/editor.js"></script>');
+	$template->add_header_js('<style type="text/css">
+			select.guied_dropdown {
+				font-size: 10px;
+				padding: 0;
+				border: 1px solid #aaaaff;
+				background-color: white;
+				color: #202020;
+			}
+		</style><script type="text/javascript" src="' . scriptPath . '/plugins/guieditor/editor.js"></script>');
 }
 
 //
@@ -70,10 +78,20 @@ function guied_image_autofill(&$dataset)
 				btn_intlink: 'Internal link',
 				btn_extlink: 'External link',
 				btn_image: 'Image',
+				btn_table: 'Table',
+				btn_ulist: 'Bulleted list',
+				btn_olist: 'Numbered list',
 				
+				sample_heading: 'Heading',
 				sample_bold: 'Bold text',
 				sample_italic: 'Italic text',
 				sample_underline: 'Underlined text',
+				// translators: translating this may be easier if you understand wiki-table syntax
+				sample_table: '|-\n! Column header 1\n! Column header 2\n|-\n| Row 1, column 1\n| Row 1, column 2\n|-\n| Row 2, column 1\n| Row 2, column 2',
+				sample_ulist: '\n* Bulleted list\n** Sub-level\n*** Deeper indent\n* Back to one indent',
+				sample_olist: '\n# Numbered list\n## Sub-level\n### Deeper indent\n# Back to one indent',
+				
+				lbl_heading: 'Heading',
 				
 				intlink_title: 'Insert internal link',
 				intlink_lbl_page: 'Page:',

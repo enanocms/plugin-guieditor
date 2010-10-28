@@ -15,7 +15,7 @@ function guied_insert_toolbar(ta_wrapper, toolbar_templates)
 	
 	toolbar += head.run();
 	
-	var buttons = ['bold*', 'italic*', 'underline*', '|', 'intlink', 'extlink', 'image'];
+	var buttons = ['heading', '|', 'bold*', 'italic*', 'underline*', '|', 'intlink', 'extlink', 'image', 'table', '|', 'ulist*', 'olist*'];
 	
 	// Button: Bold
 	var i;
@@ -26,6 +26,20 @@ function guied_insert_toolbar(ta_wrapper, toolbar_templates)
 		{
 			label.assign_vars({
 					TITLE: '<img alt="|" src="' + scriptPath + '/plugins/guieditor/icons/separator.png" />'
+				});
+			toolbar += label.run();
+		}
+		else if ( buttons[i] == 'heading' )
+		{
+			var options = [];
+			options.push('<option value="0">' + $lang.get('guied_lbl_heading') + '...</option>');
+			for ( var j = 1; j <= 6; j++ )
+			{
+				options.push('<option value="' + j + '">' + $lang.get('guied_lbl_heading') + ' '+j+'</option>');
+			}
+			options = implode('', options);
+			label.assign_vars({
+					TITLE: '<select class="guied_dropdown" onchange="guied_register_heading(this);">' + options + '</select>'
 				});
 			toolbar += label.run();
 		}
@@ -156,6 +170,8 @@ function guied_act(action)
 			var il_mp = miniPrompt(function(div)
 				{
 					div.innerHTML += '<h3>' + $lang.get('guied_image_title') + '</h3>';
+					// Yes, I know what you're thinking. Probably something along the lines of "holy fuck, this is a long ass string."
+					// I'll move all these tools over to templates at some point in time
 					div.innerHTML += '<table border="0" cellspacing="5" cellpadding="0" style="width: 100%;"> \
 								<tr> \
 									<td valign="top" style="white-space: nowrap;"> \
@@ -275,11 +291,31 @@ function guied_act(action)
 			$('#guied_image_caption').val(selection);
 			
 			break;
+		case 'table':
+			guied_insert_wikitext_tag(textarea, "{| styled\n", "\n|}", $lang.get('guied_sample_table'));
+			break;
+		case 'ulist':
+			guied_replace_selection(textarea, $lang.get('guied_sample_ulist'));
+			break;
+		case 'olist':
+			guied_replace_selection(textarea, $lang.get('guied_sample_olist'));
+			break;
 		
 	}
-	/*
+}
+
+function guied_register_heading(select)
+{
+	var textarea = document.getElementById('ajaxEditArea');
+	var n = Number($(select).val());
+	if ( n < 1 || n > 6 )
+		return;
+	$(select).val('0');
+	var tag = '';
+	for ( var i = 0; i < n; i++ )
+		tag += '=';
 	
-										*/
+	guied_insert_wikitext_tag(textarea, tag + ' ', ' ' + tag, $lang.get('guied_sample_heading'));
 }
 
 function guied_intlink_finish(insertbtn)
@@ -376,6 +412,8 @@ function guied_image_finish(insertbtn)
 		case 'inline':
 			caption = $('#guied_image_alttext').val();
 			break;
+		case 'raw':
+			attrs.push('raw');
 	}
 	if ( caption != '' )
 		attrs.push(caption);
