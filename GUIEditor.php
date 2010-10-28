@@ -81,6 +81,7 @@ function guied_image_autofill(&$dataset)
 				btn_table: 'Table',
 				btn_ulist: 'Bulleted list',
 				btn_olist: 'Numbered list',
+				btn_signature: 'Signature',
 				
 				sample_heading: 'Heading',
 				sample_bold: 'Bold text',

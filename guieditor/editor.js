@@ -15,7 +15,7 @@ function guied_insert_toolbar(ta_wrapper, toolbar_templates)
 	
 	toolbar += head.run();
 	
-	var buttons = ['heading', '|', 'bold*', 'italic*', 'underline*', '|', 'intlink', 'extlink', 'image', 'table', '|', 'ulist*', 'olist*'];
+	var buttons = ['heading', '|', 'bold*', 'italic*', 'underline*', '|', 'intlink', 'extlink', 'image*', 'table*', '|', 'ulist*', 'olist*', '|', 'signature'];
 	
 	// Button: Bold
 	var i;
@@ -300,7 +300,9 @@ function guied_act(action)
 		case 'olist':
 			guied_replace_selection(textarea, $lang.get('guied_sample_olist'));
 			break;
-		
+		case 'signature':
+			guied_replace_selection(textarea, '~~~~');
+			break;
 	}
 }
 
