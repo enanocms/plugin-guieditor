@@ -16,6 +16,8 @@ function guied_insert_toolbar(ta_wrapper, toolbar_templates)
 	toolbar += head.run();
 	
 	var buttons = ['heading', '|', 'bold*', 'italic*', 'underline*', '|', 'intlink', 'extlink', 'image*', 'table*', '|', 'ulist*', 'olist*', '|', 'signature'];
+	// if new images are to be added, run sprite.sh under icons/ and update this array
+	var spritelist = ['add', 'bold', 'extlink', 'image', 'intlink', 'italic', 'olist', 'signature', 'table', 'ulist', 'underline', 'separator'];
 	
 	// Button: Bold
 	var i;
@@ -25,7 +27,7 @@ function guied_insert_toolbar(ta_wrapper, toolbar_templates)
 		if ( buttons[i] == '|' )
 		{
 			label.assign_vars({
-					TITLE: '<img alt="|" src="' + scriptPath + '/plugins/guieditor/icons/separator.png" />'
+					TITLE: gen_sprite_html(cdnPath + '/plugins/guieditor/icons/sprite.png', 8, 16, 0, (spritelist.length - 1) * 16),
 				});
 			toolbar += label.run();
 		}
@@ -53,7 +55,8 @@ function guied_insert_toolbar(ta_wrapper, toolbar_templates)
 			}
 			button.assign_vars({
 					TITLE: $lang.get('guied_btn_' + buttons[i]),
-					IMAGE: cdnPath + '/plugins/guieditor/icons/' + buttons[i] + '.png',
+					// FIXME: indexOf is error prone here
+					SPRITE: gen_sprite_html(cdnPath + '/plugins/guieditor/icons/sprite.png', 16, 16, 0, spritelist.indexOf(buttons[i]) * 16),
 					FLAGS: 'href="#" onclick="guied_act(\'' + buttons[i] + '\'); return false;"'
 				});
 			toolbar += button.run();
@@ -76,6 +79,7 @@ function guied_insert_toolbar(ta_wrapper, toolbar_templates)
 function guied_act(action)
 {
 	var textarea = document.getElementById('ajaxEditArea');
+	var af_class = typeof(autofill_schemas.floodlight) == 'object' ? 'guied_floodlight' : 'page';
 	switch(action)
 	{
 		case 'bold':
@@ -99,7 +103,7 @@ function guied_act(action)
 									' + $lang.get('guied_intlink_lbl_page') + ' \
 									</td> \
 									<td valign="top"> \
-										<input type="text" id="guied_intlink_page" class="autofill page" style="width: 100%;" /><br /> \
+										<input type="text" id="guied_intlink_page" class="autofill ' + af_class + '" style="width: 100%;" /><br /> \
 										<small>' + $lang.get('guied_intlink_af_hint') + '</small> \
 									</td> \
 								</tr> \
@@ -573,3 +577,31 @@ autofill_schemas.guied_image = {
 	}
 	
 };
+
+// This is only used if floodlight is available
+autofill_schemas.guied_floodlight = {
+  init: function(element, fillclass, params)
+  {
+    params = params || {};
+    $(element).autocomplete(makeUrlNS('Special', 'Autofill', 'type=floodlight') + '&userinput=', {
+        minChars: 3,
+        formatItem: function(row, _, __)
+        {
+          var type = ( typeof(row.type) == 'string' ) ? row.type : '';
+          var html = '<big>' + row.title + '</big> <small>' + type + '</small>';
+          html += '<br /><small>' + $lang.get('floodlight_lbl_score') + row.score + '% | ' + row.size + '</small>';
+          row[0] = row[0].replace(/^go:/, '');
+          return html;
+        },
+        tableHeader: '<tr><th>' + $lang.get('floodlight_table_heading') + '</th></tr>',
+        showWhenNoResults: true,
+        onItemSelect: function(li)
+        {
+        	$(element).val(li.selectValue.replace(/^go:/, ''));
+        },
+        width: 180,
+        noResultsHTML: '<tr><td class="row1" style="font-size: smaller;">' + $lang.get('floodlight_msg_no_results') + '</td></tr>',
+    });
+  }
+};
+
