@@ -73,6 +73,7 @@ function guied_insert_toolbar(ta_wrapper, toolbar_templates)
 	
 	var wrapperdiv = document.createElement('div');
 	wrapperdiv.innerHTML = toolbar;
+	wrapperdiv.className = 'hide-with-mce';
 	ta_wrapper.appendChild(wrapperdiv);
 }
 
