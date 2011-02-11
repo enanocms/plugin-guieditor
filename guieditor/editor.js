@@ -1,6 +1,6 @@
-attachHook('editor_gui_toolbar', 'guied_insert_toolbar(ta_wrapper, response.toolbar_templates);');
+attachHook('editor_gui_toolbar', 'guied_insert_toolbar(ta_wrapper, textarea, response.toolbar_templates);');
 
-function guied_insert_toolbar(ta_wrapper, toolbar_templates)
+function guied_insert_toolbar(ta_wrapper, textarea, toolbar_templates)
 {
 	// Init toolbar
 	var toolbar = '';
@@ -57,7 +57,7 @@ function guied_insert_toolbar(ta_wrapper, toolbar_templates)
 					TITLE: $lang.get('guied_btn_' + buttons[i]),
 					// FIXME: indexOf is error prone here
 					SPRITE: gen_sprite_html(cdnPath + '/plugins/guieditor/icons/sprite.png', 16, 16, 0, spritelist.indexOf(buttons[i]) * 16),
-					FLAGS: 'href="#" onclick="guied_act(\'' + buttons[i] + '\'); return false;"'
+					FLAGS: 'href="#" onclick="guied_act(\'' + buttons[i] + '\', this); return false;"'
 				});
 			toolbar += button.run();
 			if ( hide_label )
@@ -73,13 +73,20 @@ function guied_insert_toolbar(ta_wrapper, toolbar_templates)
 	
 	var wrapperdiv = document.createElement('div');
 	wrapperdiv.innerHTML = toolbar;
-	wrapperdiv.className = 'hide-with-mce';
+	wrapperdiv.className = 'guieditor hide-with-mce';
+	wrapperdiv.target_ta = textarea;
 	ta_wrapper.appendChild(wrapperdiv);
 }
 
-function guied_act(action)
+function guied_act(action, obj)
 {
-	var textarea = document.getElementById('ajaxEditArea');
+	var textarea = guied_self(obj).target_ta;
+	if ( !textarea )
+	{
+		console.error('Could not get textarea');
+		console.debug(obj, guied_self(obj));
+		return null;
+	}
 	var af_class = typeof(autofill_schemas.floodlight) == 'object' ? 'guied_floodlight' : 'page';
 	switch(action)
 	{
@@ -97,6 +104,8 @@ function guied_act(action)
 			var selection = guied_get_selection(textarea);
 			var il_mp = miniPrompt(function(div)
 				{
+					console.debug(div.parentNode);
+					
 					div.innerHTML += '<h3>' + $lang.get('guied_intlink_title') + '</h3>';
 					div.innerHTML += '<table border="0" cellspacing="5" cellpadding="0" style="width: 100%;"> \
 								<tr> \
@@ -313,7 +322,7 @@ function guied_act(action)
 
 function guied_register_heading(select)
 {
-	var textarea = document.getElementById('ajaxEditArea');
+	var textarea = guied_self(select).target_ta;
 	var n = Number($(select).val());
 	if ( n < 1 || n > 6 )
 		return;
@@ -548,6 +557,17 @@ function guied_get_selection(txtarea, sampleText)
 		return myText;
 	}
 	return sampleText;
+}
+
+function guied_self(elem)
+{
+	while ( elem.tagName != 'BODY' )
+	{
+		elem = elem.parentNode;
+		if ( $(elem).hasClass('guieditor') )
+			return elem;
+	}
+	return null;
 }
 
 //
